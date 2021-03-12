@@ -1,0 +1,8 @@
+---
+- name: "test playbook"
+  hosts: localhost
+  tasks:
+    - name: "Try module"
+      my_own_module2:
+        new: "True"
+        name: Privet

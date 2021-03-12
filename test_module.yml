@@ -1,0 +1,13 @@
+---
+- name: Playbook for testing my module
+  hosts: localhost
+  tasks:
+  - name: run the new module
+    my_own_module3:
+      name: 'testfile.txt'
+      path: /tmp/testdir/
+      content: 'File content for my test module'
+    register: testout
+  - name: dump test output
+    debug:
+      msg: '{{ testout }}'
