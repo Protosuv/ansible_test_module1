@@ -3,7 +3,7 @@
   hosts: localhost
   tasks:
   - name: run the new module
-    my_own_module3:
+    my_own_module:
       name: 'testfile.txt'
       path: /tmp/testdir/
       content: 'File content for my test module'

@@ -71,15 +71,15 @@ message:
 from ansible.module_utils.basic import AnsibleModule
 import os
 from ansible.module_utils._text import to_bytes
-# from ansible.module_utils._text import to_text
+# from ansible.module_utils._text import to_text # IDE report an error. Module don't uses
 
 
 def run_module():
     # define available arguments/parameters a user can pass to the module
     module_args = dict(
-        name=dict(type='str', required=True), #name
-        path=dict(type='str', required=True),
-        content=dict(type='str', required=True)
+        name=dict(type='str', required=True), # filename
+        path=dict(type='str', required=True), # path to file
+        content=dict(type='str', required=True) # file content
 
     )
 
@@ -114,14 +114,10 @@ def run_module():
         result['changed'] = False
         result['message'] = 'File already exist'
 
-    # during the execution of the module, if there is an exception or a
-    # conditional state that effectively causes a failure, run
-    # AnsibleModule.fail_json() to pass in the message and the result
     if module.params['name'] == 'fail me':
         module.fail_json(msg='You requested this to fail', **result)
 
-    # in the event of a successful module execution, you will want to
-    # simple AnsibleModule.exit_json(), passing the key/value results
+   
     module.exit_json(**result)
 
 

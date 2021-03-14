@@ -71,15 +71,15 @@ message:
 from ansible.module_utils.basic import AnsibleModule
 import os
 from ansible.module_utils._text import to_bytes
-# from ansible.module_utils._text import to_text # IDE report an error. Module don't uses
+# from ansible.module_utils._text import to_text
 
 
 def run_module():
     # define available arguments/parameters a user can pass to the module
     module_args = dict(
-        name=dict(type='str', required=True), # filename
-        path=dict(type='str', required=True), # path to file
-        content=dict(type='str', required=True) # file content
+        name=dict(type='str', required=True), #name
+        path=dict(type='str', required=True),
+        content=dict(type='str', required=True)
 
     )
 
@@ -97,27 +97,28 @@ def run_module():
     if module.check_mode:
         module.exit_json(**result)
     
-    result['file_name'] = module.params['name']
-    result['file_path'] = module.params['path']
-    result['file_content'] = module.params['content']
+    result['original_message'] = module.params['name']
     result['message'] = 'goodbye'
     
-    file_dir= os.makedirs(module.params['path'], mode=0o755, exist_ok=True)
+    rc = os.makedirs(module.params['path'], mode=0o755, exist_ok=False)
     if (not os.access(to_bytes(module.params['path']) + to_bytes(module.params['name']), os.F_OK)):
-        with open(to_bytes(module.params['path']) + to_bytes(module.params['name']), 'wb') as f:
-            f.write(to_bytes(module.params['content']))
-            f.close()
-        
+        f = open(to_bytes(module.params['path']) + to_bytes(module.params['name']), 'wb')
+        f.write(to_bytes(module.params['content']))
+        f.close()
         result['changed'] = True
         result['message'] = 'File was created successfuly'
     else:
         result['changed'] = False
         result['message'] = 'File already exist'
 
+    # during the execution of the module, if there is an exception or a
+    # conditional state that effectively causes a failure, run
+    # AnsibleModule.fail_json() to pass in the message and the result
     if module.params['name'] == 'fail me':
         module.fail_json(msg='You requested this to fail', **result)
 
-   
+    # in the event of a successful module execution, you will want to
+    # simple AnsibleModule.exit_json(), passing the key/value results
     module.exit_json(**result)
 
 
