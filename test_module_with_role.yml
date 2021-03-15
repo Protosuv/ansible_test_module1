@@ -1,0 +1,7 @@
+---
+- name: Playbook for testing my module
+  hosts: localhost
+  collections:
+    - my_own_namespace.my_own_collection
+  roles:
+    - role: test_module-role
